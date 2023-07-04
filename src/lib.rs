@@ -49,6 +49,12 @@ impl Tile {
         Ok(tile)
     }
 
+    pub fn from_read<R: std::io::Read>(lat: i32, lng: i32, res: Resolution, read: R) -> Result<Tile, Error> {
+        let mut tile = Tile::new_empty(lat, lng, res);
+        tile.data = parse(read, tile.resolution).map_err(|_| Error::Read)?;
+        Ok(tile)
+    }
+
     pub fn extent(&self) -> u32 {
         match self.resolution {
             Resolution::SRTM1 => 3601,
